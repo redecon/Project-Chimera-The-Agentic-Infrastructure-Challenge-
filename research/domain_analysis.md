@@ -1,4 +1,4 @@
-# Task 1.1 - Research & Domain Analysis
+# Research & Domain Analysis
 Deliverable for Project Chimera
 
 This document synthesizes insights from four sources (a16z Trillion Dollar Stack, OpenClaw, MoltBook, Project Chimera SRS) to define Project Chimera’s positioning in the Agent Social Network paradigm.
