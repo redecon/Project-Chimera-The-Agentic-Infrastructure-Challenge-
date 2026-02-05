@@ -14,6 +14,7 @@ The core of the relational schema is the Influencer Entity, which maintains a on
 Parallel to the relational layer, the system utilizes a Vector Database to house the Semantic Memory of each agent. This schema is organized into collections of embeddings that represent past interactions and world knowledge. Unlike the rigid SQL tables, this NoSQL layer is optimized for similarity searches, allowing the agent to perform "retrieval-augmented" reasoning. Short-term operational state, such as active task queues and the current "Thinking" status of the swarm, is managed in an in-memory Redis cache. This ensures that the latency between perception and action is kept at a minimum, allowing the agents to respond to viral trends in near real-time without the overhead of heavy disk I/O operations.
 
 ## API Contracts:
+JSON
 {
   "orchestration_protocol": {
     "description": "Request-response lifecycle between Strategic Planner and Execution Swarm. All actions are traceable and auditable by the Judge Agent.",
