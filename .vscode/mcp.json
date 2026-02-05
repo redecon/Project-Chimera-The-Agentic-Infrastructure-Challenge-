@@ -1,13 +1,38 @@
+
 {
-	"servers": {
-		"tenxfeedbackanalytics": {
-			"url": "https://mcppulse.10academy.org/proxy",
-			"type": "http",
-            "headers": { 
-                "X-Device": "windows", 
-                "X-Coding-Tool": "vscode"
-		    } 
-        } 
-    }, 
-        "inputs": []
+  "servers": {
+    "tenxfeedbackanalytics": {
+      "url": "https://mcppulse.10academy.org/proxy",
+      "type": "http",
+      "headers": {
+        "X-Device": "windows",
+        "X-Coding-Tool": "vscode"
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./"]
+    },
+    "git": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-git"]
+    },
+    "fetch": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"]
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"]
+    },
+    "weaviate": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-weaviate"]
+    },
+    "redis": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-redis"]
+    }
+  },
+  "inputs": []
 }
