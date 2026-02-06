@@ -13,13 +13,40 @@ Inputs
 - `diarize` (boolean, optional): Enable speaker diarization when true.
 
 Outputs
-- `success` (boolean): True when transcription completes.
-- `transcript` (string): Complete transcript text.
-- `format` (string): Format of returned transcript (e.g., `plain`, `srt`).
-- `segments` (array): Optional array of `start_seconds`, `end_seconds`, `text`, `speaker`, `confidence` objects.
-- `language` (string): Detected or used language code.
-- `confidence` (number): Aggregate confidence score if available.
-- `error` (string|null): Error message when `success = false`.
+- Success case: `success: true`, `transcript`, optional `segments`, `confidence`, `error: null`.
+- Failure case: `success: false`, `error` (string) describing failure.
+
+Error handling notes
+- Possible error cases:
+  - `InvalidInput`: missing both `audio_file_path` and `audio_url`.
+  - `FileNotFound`: local path missing or remote URL returns 404.
+  - `UnsupportedFormat`: audio codec/container unsupported.
+  - `Timeout`: network fetch timed out or model decoding timed out.
+  - `ModelError`: transcription model failed or returned invalid output.
+  - `InsufficientPermissions`: cannot read file due to permissions.
+  - `BudgetExceeded`: transcription token/billing budget exceeded.
+- Behavior:
+  - Use streaming downloads and intermediate file validation (ffmpeg probe) before sending to transcription model.
+  - On transient model errors or network failures, retry with exponential backoff (max 3 attempts).
+  - Return `success: false` with a concise `error` message and write detailed diagnostics to provenance logs.
+
+Dependencies
+- System: `ffmpeg` for audio probing and format conversion.
+- Libraries/Models: `whisper`/OpenAI/Gemini adapter or internal ASR model, `pydub` or `ffmpeg-python` for pre-processing.
+- MCP: must call transcription model through MCP adapter to ensure billing/accounting and policy checks.
+
+Example error responses
+- File not found (remote):
+
+```json
+{ "success": false, "error": "File not found (HTTP 404)" }
+```
+
+- Unsupported format:
+
+```json
+{ "success": false, "error": "Unsupported audio format: application/octet-stream" }
+```
 
 Behavioral notes
 - Implementations SHOULD provide reasonable defaults for `model` and honor `language` hints when available.

@@ -15,32 +15,53 @@
       },
       "additionalProperties": false
     },
-    "output": {
+    "successOutput": {
       "type": "object",
       "required": ["success"],
       "properties": {
-        "success": { "type": "boolean" },
+        "success": { "type": "boolean", "enum": [true] },
         "file_path": { "type": "string", "description": "Absolute or repo-relative path to the downloaded file when success=true." },
         "content_type": { "type": "string", "description": "MIME type detected for the downloaded file." },
         "content_length": { "type": "integer", "description": "Size in bytes if known." },
         "duration_seconds": { "type": ["number", "null"], "description": "Optional media duration if determinable." },
-        "error": { "type": ["string", "null"], "description": "Error message when success=false." },
+        "error": { "type": ["null"], "description": "Null when success=true." },
         "metadata": { "type": "object", "description": "Optional provider metadata (etag, last-modified).", "additionalProperties": true }
+      },
+      "additionalProperties": false
+    },
+    "failureOutput": {
+      "type": "object",
+      "required": ["success","error"],
+      "properties": {
+        "success": { "type": "boolean", "enum": [false] },
+        "error": { "type": "string", "description": "Error message when success=false." }
       },
       "additionalProperties": false
     }
   },
-  "examples": {
-    "input": {
-      "url": "https://cdn.example.com/videos/episode123.mp4",
-      "filename": "episode123.mp4"
+  "properties": {},
+  "oneOf": [
+    { "$ref": "#/definitions/successOutput" },
+    { "$ref": "#/definitions/failureOutput" }
+  ],
+  "examples": [
+    {
+      "input": {
+        "url": "https://cdn.example.com/videos/episode123.mp4",
+        "filename": "episode123.mp4"
+      },
+      "output": {
+        "success": true,
+        "file_path": "./data/videos/episode123.mp4",
+        "content_type": "video/mp4",
+        "content_length": 12345678,
+        "duration_seconds": 312.4,
+        "error": null
+      }
     },
-    "output": {
-      "success": true,
-      "file_path": "./data/videos/episode123.mp4",
-      "content_type": "video/mp4",
-      "content_length": 12345678,
-      "duration_seconds": 312.4
+    {
+      "input": { "url": "https://cdn.example.com/videos/missing.mp4" },
+      "output": { "success": false, "error": "HTTP 404 Not Found" }
     }
-  }
+  ]
 }
