@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Skill: reconcile-ledger - schema",
+  "description": "Input and output contract for the reconcile-ledger skill which reconciles transaction streams against a canonical ledger snapshot.",
+  "type": "object",
+  "definitions": {
+    "transaction": {
+      "type": "object",
+      "required": ["id","timestamp","amount","currency"],
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "amount": { "type": "number" },
+        "currency": { "type": "string" },
+        "description": { "type": "string" },
+        "metadata": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "input": {
+      "type": "object",
+      "required": ["transactions","ledger_snapshot"],
+      "properties": {
+        "transactions": { "type": "array", "items": { "$ref": "#/definitions/transaction" } },
+        "ledger_snapshot": { "type": "array", "items": { "$ref": "#/definitions/transaction" }, "description": "Canonical ledger entries to reconcile against." },
+        "tolerance_cents": { "type": "integer", "default": 0, "description": "Allowed cent-level difference when matching amounts." },
+        "currency": { "type": "string", "description": "Currency code to normalize amounts." }
+      },
+      "additionalProperties": false
+    },
+    "match": {
+      "type": "object",
+      "properties": {
+        "transaction_id": { "type": "string" },
+        "ledger_id": { "type": "string" },
+        "amount_diff": { "type": "number" }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["success","summary"],
+      "properties": {
+        "success": { "type": "boolean" },
+        "summary": { "type": "object", "properties": { "total_transactions": { "type": "integer" }, "matched": { "type": "integer" }, "unmatched_transactions": { "type": "integer" }, "unmatched_ledger": { "type": "integer" } } },
+        "matches": { "type": "array", "items": { "$ref": "#/definitions/match" } },
+        "unmatched_transactions": { "type": "array", "items": { "$ref": "#/definitions/transaction" } },
+        "unmatched_ledger": { "type": "array", "items": { "$ref": "#/definitions/transaction" } },
+        "adjustments": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+        "error": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}
