@@ -1,0 +1,12 @@
+version: 1
+reviewers:
+  ai:
+    enabled: true
+    checks:
+      - Spec Alignment
+      - Security Vulnerabilities
+rules:
+  spec_alignment:
+    description: Ensure code changes align with the approved specification in /specs
+  security_vulnerabilities:
+    description: Flag insecure code patterns, secrets in commits, or dependency issues
