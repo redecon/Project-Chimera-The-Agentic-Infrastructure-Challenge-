@@ -15,9 +15,8 @@ dependencies = [
     "langchain>=0.1",
     "coinbase-agentkit>=0.3",
     "cdp-sdk>=0.1",
-    "pytest>=7.0",
     "python-dotenv>=1.0"
 ]
 
-[tool.uv]
-
+[tool.uv.dependencies]
+pytest = "^8.0"
