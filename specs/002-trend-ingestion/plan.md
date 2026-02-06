@@ -35,6 +35,12 @@ Security & Secrets: PASS (requires infra) — Secrets managed via external secre
 
 Testing & Observability: PASS — Unit tests, contract tests, integration tests required. Observability: structured logs, distributed tracing (OpenTelemetry), and metrics (Prometheus) for ingestion rate, processing latency, failed enrichments, pending embeddings.
 
+## Plan Validation
+
+- **Validated**: 2026-02-06
+- **Validator**: copilot (automation)
+- **Status**: Phase 0 complete — Constitution checks PASS. Ready to proceed to Phase 1 (Design).
+
 ## Project Structure
 
 ```text
