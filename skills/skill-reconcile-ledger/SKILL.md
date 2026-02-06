@@ -13,13 +13,38 @@ Inputs
 - `currency` (string, optional): Currency to normalize amounts.
 
 Outputs
-- `success` (boolean): True if reconciliation completed (even if unmatched items remain).
-- `summary` (object): Counts of total, matched, unmatched transactions and ledger entries.
-- `matches` (array): Matched pairs with `transaction_id`, `ledger_id`, and `amount_diff`.
-- `unmatched_transactions` (array): Incoming transactions with no ledger match.
-- `unmatched_ledger` (array): Ledger entries with no incoming match.
-- `adjustments` (array): Suggested adjustments or remediation actions (implementation-dependent).
-- `error` (string|null): Error message on failure.
+- Success case: `success: true`, `summary`, `matches`, `unmatched_transactions`, `unmatched_ledger`, `adjustments`, `error: null`.
+- Failure case: `success: false`, `error` (string) describing failure.
+
+Error handling notes
+- Possible error cases:
+  - `InvalidInput`: missing required fields or malformed transaction objects.
+  - `LedgerAccessError`: cannot read ledger snapshot (permission or connectivity issues).
+  - `DBError`: database errors when attempting to persist reconciliation results.
+  - `ToleranceMismatch`: configuration error leading to unexpected matching behavior.
+  - `BudgetExceeded`: reconciliation job exceeded compute or billing budget.
+- Behavior:
+  - Validate input schema strictly; return `success: false` with `error` explaining invalid fields.
+  - For transient DB errors, apply bounded retries with exponential backoff; after retries exhausted, return `success: false` and write diagnostic to audit logs and move work item to DLQ if applicable.
+  - Ensure reconciliation is idempotent: include a stable `run_id` and avoid double-posting adjustments.
+
+Dependencies
+- Libraries: `psycopg2` or `asyncpg` for Postgres access, `decimal` for currency-safe math.
+- External services: Coinbase AgentKit adapter (for on-chain verification when needed), accounting systems connectors.
+- MCP: ledger API access must be via MCP connector that enforces approval for sensitive adjustments.
+
+Example error responses
+- Ledger access error:
+
+```json
+{ "success": false, "error": "Ledger access denied: permission error for snapshot 2026-02-05" }
+```
+
+- Invalid input:
+
+```json
+{ "success": false, "error": "Invalid input: transaction[0].amount is not a number" }
+```
 
 Behavioral notes
 - Matching SHOULD prefer exact `id` matches, then fuzzy timestamp/amount matching within `tolerance_cents`.

@@ -35,19 +35,39 @@
         "amount_diff": { "type": "number" }
       }
     },
-    "output": {
+    "successOutput": {
       "type": "object",
       "required": ["success","summary"],
       "properties": {
-        "success": { "type": "boolean" },
+        "success": { "type": "boolean", "enum": [true] },
         "summary": { "type": "object", "properties": { "total_transactions": { "type": "integer" }, "matched": { "type": "integer" }, "unmatched_transactions": { "type": "integer" }, "unmatched_ledger": { "type": "integer" } } },
         "matches": { "type": "array", "items": { "$ref": "#/definitions/match" } },
         "unmatched_transactions": { "type": "array", "items": { "$ref": "#/definitions/transaction" } },
         "unmatched_ledger": { "type": "array", "items": { "$ref": "#/definitions/transaction" } },
         "adjustments": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
-        "error": { "type": ["string", "null"] }
+        "error": { "type": ["null"] }
+      },
+      "additionalProperties": false
+    },
+    "failureOutput": {
+      "type": "object",
+      "required": ["success","error"],
+      "properties": {
+        "success": { "type": "boolean", "enum": [false] },
+        "error": { "type": "string" }
       },
       "additionalProperties": false
     }
-  }
+  },
+  "oneOf": [ { "$ref": "#/definitions/successOutput" }, { "$ref": "#/definitions/failureOutput" } ],
+  "examples": [
+    {
+      "input": { "transactions": [], "ledger_snapshot": [] },
+      "output": { "success": true, "summary": { "total_transactions": 0, "matched": 0, "unmatched_transactions": 0, "unmatched_ledger": 0 }, "error": null }
+    },
+    {
+      "input": { "transactions": [{ "id": "t1", "timestamp": "2026-02-06T00:00:00Z", "amount": 100.0, "currency": "USD" }], "ledger_snapshot": [] },
+      "output": { "success": false, "error": "No ledger snapshot provided or ledger access error" }
+    }
+  ]
 }
