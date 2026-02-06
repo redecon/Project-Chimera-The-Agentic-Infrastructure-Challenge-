@@ -1,4 +1,4 @@
-# Project Chimera — Autonomous Influencer Network
+# Project Chimera  Autonomous Influencer Network
 
 ## Project Overview & Mission
 Project Chimera is an Autonomous Influencer Network that composes agentic workflows to create, validate, and publish multimodal content and on-chain proofs of outcome. Chimera coordinates a Hierarchical Swarm of planners, workers (skills), and a Judge agent to maintain brand safety, traceability, and human-in-the-loop (HITL) oversight.
