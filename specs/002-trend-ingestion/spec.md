@@ -117,3 +117,17 @@
 ## Constitution Compliance
 All functional requirements defined in this specification MUST include a Constitution Check section referencing `constitution.md`. 
 This ensures traceability to governance principles and alignment with security, workflow, and HITL rules.
+
+## Technical Specification & Traceability
+
+This section links the canonical technical artifacts that implement and constrain the functional requirements above. Reviewers MUST use these links to validate that API contracts and the data model align with the feature's FR and SC identifiers.
+
+- **API Contract**: The ingestion API schema and request/response contracts are defined in the OpenAPI file: [specs/002-trend-ingestion/contracts/ingestion-openapi.yaml](specs/002-trend-ingestion/contracts/ingestion-openapi.yaml). Map each API endpoint and required field to related FR IDs (e.g., `FR-XXX -> POST /ingest`), and ensure validation/error formats are specified.
+- **Data Model / ERD**: The persistence schema and entity relationships are documented in: [specs/002-trend-ingestion/data-model.md](specs/002-trend-ingestion/data-model.md). Ensure each persisted field is traceable to an FR or SC (for example, `last_ingestion_timestamp` → SC-001 / FR-00X).
+
+Traceability checklist for reviewers:
+
+- For each Functional Requirement (`FR-###`), confirm a corresponding API field and/or persisted data field is identified and linked.
+- For each Success Criterion (`SC-###`), confirm measurable artifacts (example payloads, retention rules, error formats) are present in either the API contract or data model.
+- Note any mismatches or unlinked requirements as traceability gaps and tag them in the PR for resolution.
+

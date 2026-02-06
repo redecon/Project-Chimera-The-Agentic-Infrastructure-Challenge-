@@ -1,5 +1,56 @@
 # Data Model: Trend Ingestion Pipeline
 
+## Mermaid ERD (visual)
+
+```mermaid
+erDiagram
+    ENRICHED_TREND {
+      UUID id PK
+      string external_id
+      string source
+      text text
+      float sentiment
+      jsonb topics
+      float confidence_score
+      jsonb geo
+      jsonb enrichment_metadata
+      timestamptz created_at
+      string embedding_status
+    }
+
+    EMBEDDING_RECORD {
+      UUID id PK
+      UUID enriched_trend_id FK
+      string vector_id
+      string embedding_status
+      timestamptz created_at
+    }
+
+    FINANCIAL_RECORD {
+      UUID id PK
+      UUID enriched_trend_id FK
+      numeric cost_tokens
+      string currency
+      integer compute_duration_ms
+      timestamptz timestamp
+      string invoice_reference
+    }
+
+    PROVENANCE_LOG {
+      UUID id PK
+      UUID enriched_trend_id FK
+      text planner_intent
+      text worker_output_prompt
+      jsonb mcp_tool_parameters
+      float judge_validation_score
+      timestamptz created_at
+    }
+
+    ENRICHED_TREND ||--o{ EMBEDDING_RECORD : "has"
+    ENRICHED_TREND ||--o{ FINANCIAL_RECORD : "records"
+    ENRICHED_TREND ||--o{ PROVENANCE_LOG : "logs"
+```
+
 ## Entities
 
 ### EnrichedTrend

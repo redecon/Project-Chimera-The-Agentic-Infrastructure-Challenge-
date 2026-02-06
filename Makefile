@@ -27,3 +27,9 @@ spec-check:
 	else \
 		echo "✗ Spec check failed: timestamp missing"; exit 1; \
 	fi
+lint:
+	@echo "Running lint checks..."
+	flake8 src/
+security:
+	@echo "Running security checks..."
+	bandit -r src/

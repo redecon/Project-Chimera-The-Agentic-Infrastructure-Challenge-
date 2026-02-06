@@ -74,3 +74,10 @@ JSON
 
 ## Tooling Governance and Safety
 Every tool invocation is governed by The Prime Directive established in .cursor/rules. The agent is prohibited from using the filesystem-mcp to overwrite files without first stating its plan. Any tool interacting with the network or databases is subject to a "Reasoning Trace" requirement, documenting the necessity of the call for audit by the human Super-Orchestrator.
+
+## Runtime Skills
+Chimera agents use runtime skills defined in the skills/ directory. Each skill includes a schema.json and SKILL.md describing its input/output contract.
+
+- [skill-download-video](../skills/skill-download-video/)
+- [skill-transcribe-audio](../skills/skill-transcribe-audio/)
+- [skill-reconcile-ledger](../skills/skill-reconcile-ledger/)
